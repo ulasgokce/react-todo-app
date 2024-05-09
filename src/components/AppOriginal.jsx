@@ -1,5 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from '../logo.svg';
+import '../App.css';
 import { useState } from 'react';
 import Another from './Another';
 function App() {
@@ -11,7 +11,7 @@ function App() {
     fontSize: '50px',
   };
   function handleClick() {
-    setCount((count) => count + 1);
+    setCount(count => count + 1);
   }
 
   return (

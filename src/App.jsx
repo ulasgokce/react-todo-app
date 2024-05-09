@@ -1,15 +1,18 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { useState } from "react";
-import Another from "./Another";
+import logo from './logo.svg';
+import './App.css';
+import { useState } from 'react';
+import Another from './Another';
 function App() {
   const [count, setCount] = useState(0);
 
   const someStyle = {
-    color: "red",
-    backgroundColor: "black",
-    fontSize: "50px",
+    color: 'red',
+    backgroundColor: 'black',
+    fontSize: '50px',
   };
+  function handleClick() {
+    setCount((count) => count + 1);
+  }
 
   return (
     <div className="App">

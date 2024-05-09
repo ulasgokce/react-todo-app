@@ -7,16 +7,19 @@ function App() {
       id: 1,
       title: 'Finish React Series',
       isComplete: false,
+      isEditing: false,
     },
     {
       id: 2,
       title: 'Go to Grocery',
-      isComplete: false,
+      isComplete: true,
+      isEditing: false,
     },
     {
       id: 3,
       title: 'Do other thing',
       isComplete: false,
+      isEditing: false,
     },
   ]);
 
@@ -24,6 +27,46 @@ function App() {
 
   function deleteTodo(id) {
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+  }
+  function completeTodo(id) {
+    setTodos(prevTodos =>
+      prevTodos.map(todo => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isComplete: !todo.isComplete,
+          };
+        }
+        return todo;
+      })
+    );
+  }
+  function changeEditing(id) {
+    setTodos(prevTodos =>
+      prevTodos.map(todo => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isEditing: !todo.isEditing,
+          };
+        }
+        return todo;
+      })
+    );
+  }
+  function updateTodo(event, id) {
+    setTodos(prevTodos =>
+      prevTodos.map(todo => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            title: event.target.value.trim() ? event.target.value : todo.title,
+            isEditing: !todo.isEditing,
+          };
+        }
+        return todo;
+      })
+    );
   }
   function addTodo(event) {
     event.preventDefault();
@@ -58,15 +101,36 @@ function App() {
           {todos.map((todo, index) => (
             <li key={todo.id} className="todo-item-container">
               <div className="todo-item">
-                <input type="checkbox" defaultChecked={todo.isComplete} />
-                <span
-                  className={`todo-item-label ${
-                    todo.isComplete ? 'line-through' : ''
-                  }`}
-                >
-                  {todo.title}
-                </span>
-                {/* <input type="text" className="todo-item-input" value="Finish React Series" /> */}
+                <input
+                  type="checkbox"
+                  defaultChecked={todo.isComplete}
+                  onChange={() => completeTodo(todo.id)}
+                />
+                {!todo.isEditing ? (
+                  <span
+                    onDoubleClick={() => changeEditing(todo.id)}
+                    className={`todo-item-label ${
+                      todo.isComplete ? 'line-through' : ''
+                    }`}
+                  >
+                    {todo.title}
+                  </span>
+                ) : (
+                  <input
+                    type="text"
+                    onBlur={event => updateTodo(event, todo.id)}
+                    onKeyDown={event => {
+                      if (event.key === 'Enter') {
+                        updateTodo(event, todo.id);
+                      } else if (event.key === 'Escape') {
+                        changeEditing(todo.id);
+                      }
+                    }}
+                    autoFocus
+                    className="todo-item-input"
+                    defaultValue={todo.title}
+                  />
+                )}
               </div>
               <button className="x-button" onClick={() => deleteTodo(todo.id)}>
                 <svg

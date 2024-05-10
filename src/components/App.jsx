@@ -1,34 +1,35 @@
 import '../rest.css';
 import '../App.css';
 import NoTodos from './NoTodos.jsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
-import { func } from 'prop-types';
+import useLocalStorage from '../hooks/useLocalStorage';
 function App() {
-  const [name, setName] = useState('');
+  const [name, setName] = useLocalStorage('name', '');
   const nameInputEl = useRef(null);
-  const [lastTodoId, setLastTodoId] = useState(4);
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: 'Finish React Series',
-      isComplete: false,
-      isEditing: false,
-    },
-    {
-      id: 2,
-      title: 'Go to Grocery',
-      isComplete: true,
-      isEditing: false,
-    },
-    {
-      id: 3,
-      title: 'Do other thing',
-      isComplete: false,
-      isEditing: false,
-    },
-  ]);
+  const [lastTodoId, setLastTodoId] = useLocalStorage('lastTodoId', 0);
+  const [todos, setTodos] = useLocalStorage('todos', []);
+  // const [todos, setTodos] = useState([
+  //   {
+  //     id: 1,
+  //     title: 'Finish React Series',
+  //     isComplete: false,
+  //     isEditing: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Go to Grocery',
+  //     isComplete: true,
+  //     isEditing: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Do other thing',
+  //     isComplete: false,
+  //     isEditing: false,
+  //   },
+  // ]);
 
   function deleteTodo(id) {
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
@@ -111,12 +112,15 @@ function App() {
   }
   useEffect(() => {
     nameInputEl.current.focus();
-
     return () => {
       // console.log('App component unmounted');
     };
   }, []);
 
+  function handleNameInput(event) {
+    setName(event.target.value);
+    localStorage.setItem('name', JSON.stringify(event.target.value));
+  }
   return (
     <div className="todo-app-container">
       <div className="todo-app">
@@ -129,7 +133,7 @@ function App() {
               className="todo-input"
               placeholder="what is your name"
               value={name}
-              onChange={event => setName(event.target.value)}
+              onChange={handleNameInput}
             />
             {name && <p className="name-label">Hello, {name}</p>}
           </form>

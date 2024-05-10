@@ -1,44 +1,39 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+import { TodosContext } from '../context/TodosContext';
 
-TodoFilters.propTypes = {
-  todosFiltered: PropTypes.func.isRequired,
-  filter: PropTypes.string.isRequired,
-  setFilter: PropTypes.func.isRequired,
-};
-
-function TodoFilters(props) {
+function TodoFilters() {
+  const { filter, setFilter, todosFiltered } = useContext(TodosContext);
   return (
     <div>
       <button
         className={`button filter-button ${
-          props.filter === 'all' ? 'filter-button-active' : ''
+          filter === 'all' ? 'filter-button-active' : ''
         }`}
         onClick={() => {
-          props.todosFiltered('all');
-          props.setFilter('all');
+          todosFiltered();
+          setFilter('all');
         }}
       >
         All
       </button>
       <button
         className={`button filter-button ${
-          props.filter === 'active' ? 'filter-button-active' : ''
+          filter === 'active' ? 'filter-button-active' : ''
         }`}
         onClick={() => {
-          props.todosFiltered('active');
-          props.setFilter('active');
+          todosFiltered();
+          setFilter('active');
         }}
       >
         Active
       </button>
       <button
         className={`button filter-button ${
-          props.filter === 'completed' ? 'filter-button-active' : ''
+          filter === 'completed' ? 'filter-button-active' : ''
         }`}
         onClick={() => {
-          props.todosFiltered('completed');
-          props.setFilter('completed');
+          todosFiltered();
+          setFilter('completed');
         }}
       >
         Completed

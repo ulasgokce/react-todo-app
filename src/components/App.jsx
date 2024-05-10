@@ -1,12 +1,14 @@
 import '../rest.css';
 import '../App.css';
 import NoTodos from './NoTodos.jsx';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
 import { func } from 'prop-types';
 function App() {
-  const [lastTodoId, setLastTodoId] = useState(4); // [1, 2, 3
+  const [name, setName] = useState('');
+  const nameInputEl = useRef(null);
+  const [lastTodoId, setLastTodoId] = useState(4);
   const [todos, setTodos] = useState([
     {
       id: 1,
@@ -83,9 +85,11 @@ function App() {
     ]);
     setLastTodoId(prevLastTodoId => prevLastTodoId + 1);
   }
-  function remaining() {
+  function remainingCalculation() {
     return todos.filter(todo => !todo.isComplete).length;
   }
+  const remaining = useMemo(() => remainingCalculation(), [todos]);
+
   function clearCompleted() {
     setTodos(prevTodos => prevTodos.filter(todo => !todo.isComplete));
   }
@@ -105,9 +109,31 @@ function App() {
         return todos;
     }
   }
+  useEffect(() => {
+    nameInputEl.current.focus();
+
+    return () => {
+      // console.log('App component unmounted');
+    };
+  }, []);
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
+        <div className="name-container">
+          <h2>What is your name?</h2>
+          <form action="#">
+            <input
+              ref={nameInputEl}
+              type="text"
+              className="todo-input"
+              placeholder="what is your name"
+              value={name}
+              onChange={event => setName(event.target.value)}
+            />
+            {name && <p className="name-label">Hello, {name}</p>}
+          </form>
+        </div>
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
         {todos.length > 0 ? (

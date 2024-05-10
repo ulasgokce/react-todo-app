@@ -19,7 +19,7 @@ TodoList.propTypes = {
   completeTodo: PropTypes.func.isRequired,
   changeEditing: PropTypes.func.isRequired,
   updateTodo: PropTypes.func.isRequired,
-  remaining: PropTypes.func.isRequired,
+  remaining: PropTypes.number.isRequired,
   clearCompleted: PropTypes.func.isRequired,
   completeAllTodos: PropTypes.func.isRequired,
 };
@@ -89,9 +89,10 @@ function TodoList(props) {
         <TodoItemsRemanining remaining={props.remaining} />
       </div>
       <div className="other-buttons-container">
-        <TodoFilters todosFiltered={props.todosFiltered}
-        filter={filter}
-        setFilter={setFilter}
+        <TodoFilters
+          todosFiltered={props.todosFiltered}
+          filter={filter}
+          setFilter={setFilter}
         />
         <div>
           <TodoClearCompleted clearCompleted={props.clearCompleted} />

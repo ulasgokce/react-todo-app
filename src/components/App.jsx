@@ -4,6 +4,7 @@ import NoTodos from './NoTodos.jsx';
 import { useState } from 'react';
 import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
+import { func } from 'prop-types';
 function App() {
   const [lastTodoId, setLastTodoId] = useState(4); // [1, 2, 3
   const [todos, setTodos] = useState([
@@ -77,9 +78,32 @@ function App() {
         id: lastTodoId,
         title: todo,
         isComplete: false,
+        isEditing: false,
       },
     ]);
     setLastTodoId(prevLastTodoId => prevLastTodoId + 1);
+  }
+  function remaining() {
+    return todos.filter(todo => !todo.isComplete).length;
+  }
+  function clearCompleted() {
+    setTodos(prevTodos => prevTodos.filter(todo => !todo.isComplete));
+  }
+
+  function completeAllTodos() {
+    setTodos(prevTodos =>
+      prevTodos.map(todo => ({ ...todo, isComplete: true }))
+    );
+  }
+  function todosFiltered(filter) {
+    switch (filter) {
+      case 'active':
+        return todos.filter(todo => !todo.isComplete);
+      case 'completed':
+        return todos.filter(todo => todo.isComplete);
+      default:
+        return todos;
+    }
   }
   return (
     <div className="todo-app-container">
@@ -94,6 +118,10 @@ function App() {
               deleteTodo={deleteTodo}
               changeEditing={changeEditing}
               updateTodo={updateTodo}
+              remaining={remaining}
+              clearCompleted={clearCompleted}
+              completeAllTodos={completeAllTodos}
+              todosFiltered={todosFiltered}
             />
           </>
         ) : (

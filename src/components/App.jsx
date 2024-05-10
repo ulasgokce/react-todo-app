@@ -6,6 +6,7 @@ import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { TodosContext } from '../context/TodosContext.js';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 function App() {
   const [name, setName] = useLocalStorage('name', '');
   const nameInputEl = useRef(null);
@@ -59,12 +60,27 @@ function App() {
                 value={name}
                 onChange={handleNameInput}
               />
-              {name && <p className="name-label">Hello, {name}</p>}
+              <CSSTransition
+                in={name.length > 0}
+                timeout={300}
+                classNames={'slide-vertical'}
+                unmountOnExit
+              >
+                <p className="name-label">Hello, {name}</p>
+              </CSSTransition>
             </form>
           </div>
           <h2>Todo App</h2>
           <TodoForm />
-          {todos.length > 0 ? <TodoList /> : <NoTodos />}
+          <SwitchTransition mode="out-in">
+            <CSSTransition
+              key={todos.length > 0}
+              timeout={300}
+              classNames="slide-vertical"
+            >
+              {todos.length > 0 ? <TodoList /> : <NoTodos />}
+            </CSSTransition>
+          </SwitchTransition>
         </div>
       </div>
     </TodosContext.Provider>
